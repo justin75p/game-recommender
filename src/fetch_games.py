@@ -48,3 +48,6 @@ def fetch_games(num_pages: int, page_size: int):
 
     return games
 
+def save_to_db():
+    # TODO: saves a list of games into database
+    return None
