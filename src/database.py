@@ -42,7 +42,29 @@ class Database():
             self.conn.close()
 
     def save_games(self, games):
-        pass
+        if not self.conn:
+            print("No connection found. Call connect() first.")
+            return
+        
+        cursor = self.conn.cursor()
+        for game in games:
+            cursor.execute("""
+                INSERT INTO games (id, name, rating, playtime, metacritic, genres, tags)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (id) DO NOTHING
+            """, (
+                game['id'],
+                game['name'],
+                game['rating'],
+                game['playtime'],
+                game['metacritic'],
+                ','.join(game['genres']),
+                ','.join(game['tags'])
+                )
+            )
+
+        self.conn.commit()
+        cursor.close()
 
     def get_all_games(self):
         pass
