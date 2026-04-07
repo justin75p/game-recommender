@@ -67,4 +67,13 @@ class Database():
         cursor.close()
 
     def get_all_games(self):
-        pass
+        if not self.conn:
+            print("No connection found. Call connect() first.")
+            return
+        
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM games")
+        rows = cursor.fetchall()
+        cursor.close()
+
+        return rows
