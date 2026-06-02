@@ -29,6 +29,7 @@ class Database():
                 rating REAL,
                 playtime INTEGER,
                 metacritic INTEGER,
+                added INTEGER,
                 genres TEXT,
                 tags TEXT
             )
@@ -49,8 +50,8 @@ class Database():
         cursor = self.conn.cursor()
         for game in games:
             cursor.execute("""
-                INSERT INTO games (id, name, rating, playtime, metacritic, genres, tags)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO games (id, name, rating, playtime, metacritic, added, genres, tags)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (id) DO NOTHING
             """, (
                 game['id'],
@@ -58,6 +59,7 @@ class Database():
                 game['rating'],
                 game['playtime'],
                 game['metacritic'],
+                game['added'],
                 ','.join(game['genres']),
                 ','.join(game['tags'])
                 )

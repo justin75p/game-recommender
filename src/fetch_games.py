@@ -42,6 +42,7 @@ def fetch_games(num_pages: int, page_size: int):
                 'rating': game['rating'],
                 'playtime': game['playtime'],
                 'metacritic': game['metacritic'],
+                'added': game['added'],
                 'genres': [g['name'] for g in game['genres']],
                 'tags': [t['name'] for t in game['tags']]
             })
