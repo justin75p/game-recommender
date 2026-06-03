@@ -13,8 +13,30 @@ def build_feature_matrix(games):
         games_df (DataFrame): Original game data with names and ids for lookup
     """
 
+    # Convert the list of tuples into a DataFrame, split the genres and tags into lists
     games_df = pd.DataFrame(games, columns=['id', 'name', 'rating', 'playtime', 'metacritic', 'added', 'genres', 'tags'])
     games_df['genres'] = games_df['genres'].str.split(',')
     games_df['tags'] = games_df['tags'].str.split(',')
 
-    return games_df
+    # Filter to top 25 most common tags
+    all_tags = games_df['tags'].explode()
+    top_25_tags = all_tags.value_counts().head(25).index
+
+    filtered_tags = []
+    for tag_list in games_df['tags']:
+        filtered = [tag for tag in tag_list if tag in top_25_tags]
+        filtered_tags.append(filtered)
+
+    games_df['tags'] = filtered_tags
+
+    # One-hot encode genres
+    genres_dummies = games_df['genres'].explode()
+    genres_dummies = pd.get_dummies(genres_dummies).groupby(level=0).max().astype(int)
+
+    # One-hot encode tags
+    tags_dummies = games_df['tags'].explode()
+    tags_dummies = pd.get_dummies(tags_dummies).groupby(level=0).max().astype(int)
+
+    feature_matrix = pd.concat([genres_dummies, tags_dummies], axis=1)
+
+    return feature_matrix, games_df
