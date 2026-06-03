@@ -1,4 +1,5 @@
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
 def build_feature_matrix(games):
     """
@@ -29,14 +30,19 @@ def build_feature_matrix(games):
 
     games_df['tags'] = filtered_tags
 
-    # One-hot encode genres
+    # One-hot encode genres column
     genres_dummies = games_df['genres'].explode()
     genres_dummies = pd.get_dummies(genres_dummies).groupby(level=0).max().astype(int)
 
-    # One-hot encode tags
+    # One-hot encode tags column
     tags_dummies = games_df['tags'].explode()
     tags_dummies = pd.get_dummies(tags_dummies).groupby(level=0).max().astype(int)
 
-    feature_matrix = pd.concat([genres_dummies, tags_dummies], axis=1)
+    # Normalize the rating and playtime columns
+    scaler = MinMaxScaler()
+    rating_playtime = games_df[['rating', 'playtime']]
+    normalized = pd.DataFrame(scaler.fit_transform(rating_playtime), columns = ['rating', 'playtime'])
+
+    feature_matrix = pd.concat([normalized, genres_dummies, tags_dummies], axis=1)
 
     return feature_matrix, games_df
