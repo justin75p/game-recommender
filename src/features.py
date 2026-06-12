@@ -16,8 +16,8 @@ def build_feature_matrix(games):
 
     # Convert the list of tuples into a DataFrame, split the genres and tags into lists
     games_df = pd.DataFrame(games, columns=['id', 'name', 'rating', 'playtime', 'metacritic', 'added', 'genres', 'tags'])
-    games_df['genres'] = games_df['genres'].str.split(',')
-    games_df['tags'] = games_df['tags'].str.split(',')
+    games_df['genres'] = games_df['genres'].str.split(',').fillna('').apply(list)
+    games_df['tags'] = games_df['tags'].str.split(',').fillna('').apply(list)
 
     # Filter to top 25 most common tags
     all_tags = games_df['tags'].explode()
