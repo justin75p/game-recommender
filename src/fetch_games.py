@@ -11,7 +11,7 @@ def fetch_games(num_pages: int, page_size: int):
     
     # Parameters:
         # num_pages (int): The number of pages to fetch.
-        # page_size(int): The entries per page to fetch.
+        # page_size(int): The entries per page to fetch (maximum is 40).
 
     # Returns:
         # list of dictionary: A list of games, where each game is a dictionary, with:
