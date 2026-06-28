@@ -27,7 +27,24 @@ recommender.fit(feature_matrix)
 
 @app.route("/recommend", methods = ["POST"])
 def recommend():
-    return jsonify({})
+    # Read incoming JSON request
+    data = request.get_json()
+    games = data.get("games")
+
+    if not games:
+        return jsonify({"error": "No games provided."}), 400
+
+    # TODO: improve to average feature vectors of all input games and run KNN once on the combined vector instead of looping
+    # Get recommendations for each input game
+    recommendations = []
+    for game in games:
+        rec = recommender.recommend(game, games_df, feature_matrix, 5)
+        recommendations.extend(rec)
+    
+    # Remove duplicates while preserving order
+    recommendations_set = list(dict.fromkeys(recommendations))
+
+    return jsonify({"recommendations": recommendations_set})
 
 if __name__ == "__main__":
     app.run(debug=True)
