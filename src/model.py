@@ -9,8 +9,8 @@ class GameRecommender:
         self.model = NearestNeighbors(n_neighbors=n_neighbors, metric='cosine')
         self.model.fit(feature_matrix)
     
-    def recommend(self, game_name, games_df, feature_matrix, n):
-        # Returns n recommended games based on game_name
+    def recommend(self, game_name, games_df, feature_matrix, n = 5):
+        # Returns n (default 5) recommended games based on game_name
 
         # Find the index of the game within games_df
         game_index = games_df[games_df['name'] == game_name].index[0]
